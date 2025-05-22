@@ -1,0 +1,3 @@
+[submodule "trl"]
+	path = trl
+	url = https://github.com/huggingface/trl.git
