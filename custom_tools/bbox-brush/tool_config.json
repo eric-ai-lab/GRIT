@@ -1,0 +1,8 @@
+{
+  "description": "This is a tool that returns the a image that with bounding box drawn.",
+  "name": "bbox_brush",
+  "tool_class": "bbox_brush.BoundingboxBrush",
+  "inputs":"{'question':{'type':'string', 'description':'The base64 image codings', 'content':'text'}, 'bbox':{'type':'string', 'description':'The bounding box to be drawn', 'content':'text'}}",
+  "outputs":"string",
+  "output_type": "string"
+}
