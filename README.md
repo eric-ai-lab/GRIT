@@ -1,6 +1,6 @@
 # GRIT: Teaching MLLMs to Think with Images
 
-**GRIT** is a novel method for training Multimodal Large Language Models (MLLMs) to perform grounded reasoning by generating reasoning chains that interleave natural language and explicit bounding box coordinates. This approach enables models to ground their reasoning in specific image regions, improving both interpretability and performance on visual reasoning tasks.
+**Grounded Reasoning wiht Texts and Images (GRIT)** is a novel method for training Multimodal Large Language Models (MLLMs) to perform grounded reasoning by generating reasoning chains that interleave natural language and explicit bounding box coordinates. This approach can use as few as **20 training data samples** to enable models to ground their reasoning in specific image regions, achieving a **unified grounding and reasoning ability**.
 
 <div align="center">
   <a href="https://arxiv.org/abs/XXXX.XXXXX">
@@ -14,6 +14,25 @@
   </a>
 </div>
 
+## Examples of GRIT's Grounded Reasoning
+
+<img src="readme_images/eg1.png" alt="Example 1" width="800">
+
+<details>
+<summary>More examples (click to expand)</summary>
+
+<img src="readme_images/eg2.png" alt="Example 2" width="800">
+
+<img src="readme_images/eg3.png" alt="Example 3" width="800">
+
+</details>
+
+## Pretrained Models
+
+Pretrained GRIT models are available on Hugging Face:
+
+- [GRIT-20-InternVL-2B](https://huggingface.co/yfan1997/GRIT-20-InternVL-2B): GRIT model based on InternVL 2B
+- [GRIT-20-Qwen2.5-VL-3B](https://huggingface.co/yfan1997/GRIT-20-Qwen2.5-VL-3B): GRIT model based on Qwen2.5-VL 3B
 
 ## Setup
 
@@ -83,3 +102,15 @@ Replace `MODEL_NAME` with the path to your trained model checkpoint.
 
 
 More evaluation scripts are available in scripts/
+
+
+## Citation
+
+```
+@inproceedings{grit2024,
+  title={GRIT: Teaching MLLMs to Think with Images},
+  author={...},
+  booktitle={...},
+  year={2024}
+}
+``` 
