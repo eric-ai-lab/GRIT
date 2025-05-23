@@ -262,7 +262,7 @@ Note: The InternVL model uses a different coordinate format ([x1,y1,x2,y2] with 
 ## Citation
 
 ```
-@misc{fan2025gritteachingmllmsthink,
+@misc{fan2025grit,
       title={GRIT: Teaching MLLMs to Think with Images}, 
       author={Yue Fan and Xuehai He and Diji Yang and Kaizhi Zheng and Ching-Chen Kuo and Yuting Zheng and Sravana Jyothi Narayanaraju and Xinze Guan and Xin Eric Wang},
       year={2025},
