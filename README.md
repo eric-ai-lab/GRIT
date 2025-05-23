@@ -3,7 +3,7 @@
 **Grounded Reasoning wiht Texts and Images (GRIT)** is a novel method for training Multimodal Large Language Models (MLLMs) to perform grounded reasoning by generating reasoning chains that interleave natural language and explicit bounding box coordinates. This approach can use as few as **20 training data samples** to enable models to ground their reasoning in specific image regions, achieving a **unified grounding and reasoning ability**.
 
 <div align="center">
-  <a href="https://arxiv.org/abs/XXXX.XXXXX">
+  <a href="https://arxiv.org/abs/2505.15879">
     <img src="https://img.shields.io/badge/Paper-arXiv-red?style=flat-square" alt="Paper">
   </a>
   <a href="https://grounded-reasoning.github.io">
@@ -107,10 +107,13 @@ More evaluation scripts are available in scripts/
 ## Citation
 
 ```
-@inproceedings{grit2024,
-  title={GRIT: Teaching MLLMs to Think with Images},
-  author={...},
-  booktitle={...},
-  year={2024}
+@misc{fan2025gritteachingmllmsthink,
+      title={GRIT: Teaching MLLMs to Think with Images}, 
+      author={Yue Fan and Xuehai He and Diji Yang and Kaizhi Zheng and Ching-Chen Kuo and Yuting Zheng and Sravana Jyothi Narayanaraju and Xinze Guan and Xin Eric Wang},
+      year={2025},
+      eprint={2505.15879},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2505.15879}, 
 }
 ``` 
