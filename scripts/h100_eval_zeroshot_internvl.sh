@@ -14,8 +14,8 @@ python -m accelerate.commands.launch \
     grpo-gr/GRPO_GR.py \
     --train_data_path ./GRIT_data/tallyqa_train_10.jsonl,./GRIT_data/vsr_cot_train_10.jsonl \
     --train_image_folder_path ./GRIT_data/tallyqa,./GRIT_data/vsr \
-    --eval_data_path ./GRIT_data/vsr_val.jsonl,./GRIT_data/mme_val.jsonl,./GRIT_data/tallyqa_val.jsonl,./GRIT_data/gqa_val.jsonl,./GRIT_data/mathvista_mini_val.jsonl,./GRIT_data/ovd_position_val.jsonl,./GRIT_data/ovd_relationship_val.jsonl,./GRIT_data/ovd_negation_val.jsonl \
-    --eval_image_folder_path ./GRIT_data/vsr,./GRIT_data/mme,./GRIT_data/tallyqa,./GRIT_data/gqa,./GRIT_data/mathvista_mini,./GRIT_data/ovd_position,./GRIT_data/ovd_relationship,./GRIT_data/ovd_negation \
+    --eval_data_path ./GRIT_data/vsr_val.jsonl,./GRIT_data/mme_val.jsonl,./GRIT_data/tallyqa_val.jsonl,./GRIT_data/gqa_val.jsonl,./GRIT_data/mathvista_mini_val.jsonl,./GRIT_data/ovd_position_val.jsonl \
+    --eval_image_folder_path ./GRIT_data/vsr,./GRIT_data/mme,./GRIT_data/tallyqa,./GRIT_data/gqa,./GRIT_data/mathvista_mini,./GRIT_data/ovd_position \
     --setting $setting \
     --max_turns 1 \
     --output_dir output/$setting \
