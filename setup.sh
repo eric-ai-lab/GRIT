@@ -47,6 +47,5 @@ pip install regex
 pip install deepspeed
 pip install decord timm opencv-python imageio
 
-pip install -e .
 
 echo "All dependencies installed successfully!"
