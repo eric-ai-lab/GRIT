@@ -86,12 +86,23 @@ def smart_resize(
 
 
 def to_rgb(pil_image: Image.Image) -> Image.Image:
-      if pil_image.mode == 'RGBA':
-          white_background = Image.new("RGB", pil_image.size, (255, 255, 255))
-          white_background.paste(pil_image, mask=pil_image.split()[3])  # Use alpha channel as mask
-          return white_background
-      else:
-          return pil_image.convert("RGB")
+    try:
+        if pil_image.mode == 'RGBA':
+            white_background = Image.new("RGB", pil_image.size, (255, 255, 255))
+            white_background.paste(pil_image, mask=pil_image.split()[3])
+            return white_background
+        else:
+            return pil_image.convert("RGB")
+    except OSError as e:
+        if "truncated" in str(e).lower():
+            # For truncated images, try to create a new RGB image from the data we have
+            rgb_image = Image.new("RGB", pil_image.size, (255, 255, 255))
+            try:
+                rgb_image.paste(pil_image, (0, 0))
+            except:
+                pass
+            return rgb_image
+        raise
 
 
 def fetch_image(ele: dict[str, str | Image.Image], size_factor: int = IMAGE_FACTOR) -> Image.Image:
