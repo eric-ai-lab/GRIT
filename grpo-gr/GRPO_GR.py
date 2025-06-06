@@ -85,7 +85,7 @@ if __name__ == "__main__":
         
         assert training_args.max_turns == 1
     
-        if 'add_grounded_thinking' in training_args.setting:
+        if 'add_grounded_reasoning' in training_args.setting:
             prompt = ""
             if '_think_rethink' in training_args.setting:
                 prompt_suffix = ''' First, think between <think> and </think> while output necessary coordinates needed to answer the question in JSON with key 'bbox_2d'. Then, based on the thinking contents and coordinates, rethink between <rethink> </rethink> and then answer the question after <answer>.\n'''
