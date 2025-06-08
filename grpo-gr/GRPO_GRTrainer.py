@@ -1064,8 +1064,6 @@ class GRPOGRTrainer(Trainer):
             "advantages": advantages,
         }
     
-        for i in range(len(return_content['reward_list'])):
-            return_content['reward_list'][i].append(-3)
         return return_content
 
 
