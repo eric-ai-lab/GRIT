@@ -38,7 +38,7 @@ Pretrained GRIT models are available on Hugging Face:
 
 1. Optional conda environment install
     ```bash
-    conda create -n gprogr python=3.12
+    conda create -n grit python=3.12
     ```
 2. **Clone the repository with submodules:**
    ```bash
