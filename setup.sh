@@ -7,9 +7,10 @@ sudo apt-get update
 sudo apt-get install -y python3-dev build-essential ninja-build
 sudo apt-get install ffmpeg libsm6 libxext6  -y
 
+cd trl
+pip install -e .
 
-
-pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+pip install torch==2.5.1 torchvision==0.20.1+cu121 torchaudio==2.5.1+cu121 --index-url https://download.pytorch.org/whl/cu121
 
 pip install git+https://github.com/huggingface/transformers.git@8ee50537fe7613b87881cd043a85971c85e99519
 pip install git+https://github.com/huggingface/accelerate.git
