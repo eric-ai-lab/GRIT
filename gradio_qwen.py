@@ -29,7 +29,10 @@ MAX_PIXELS = 512 * 28 * 28
 # ----------------------------------------------------------------------
 # 1. Load model & processor
 # ----------------------------------------------------------------------
-MODEL_ID = "yfan1997/GRIT-20-Qwen2.5-VL-3B"
+MODEL_ID = (
+    "/data4/yue/trl_tool_multimodal/output/"
+    "h100_dozen_vsr_qwen_add_grounded_thinking_single_turn_think_rethink_150"
+)
 
 model = Qwen2_5_VLForConditionalGeneration.from_pretrained(
     MODEL_ID,
@@ -73,7 +76,8 @@ def detect_objects(img_src, user_query: str):
 
     # img_src is a str path (from gr.Image(type="filepath"))
     image_path = img_src if isinstance(img_src, str) else img_src.name
-
+    if not image_path.lower().endswith((".jpg", ".jpeg", ".png")):
+        return None, "⚠️ Unsupported image format. Please upload a JPG or PNG file."
     prompt = (user_query or "").strip() or DEFAULT_PROMPT
     messages = [
         {

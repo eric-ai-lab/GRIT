@@ -9,7 +9,7 @@
   <a href="https://grounded-reasoning.github.io">
     <img src="https://img.shields.io/badge/Project-Page-blue?style=flat-square" alt="Project Page">
   </a>
-  <a href="https://b86dd615e41b242e22.gradio.live">
+  <a href="https://f5de8315d0f71f5133.gradio.live">
     <img src="https://img.shields.io/badge/Live-Demo-green?style=flat-square" alt="Live Demo">
   </a>
 </div>
