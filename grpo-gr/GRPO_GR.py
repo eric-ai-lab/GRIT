@@ -80,8 +80,6 @@ if __name__ == "__main__":
     prompt = ''
     if script_args.dataset_name == 'rr':
 
-        request_token = "<object>"
-        call_token = "</object>"
         
         assert training_args.max_turns == 1
     
@@ -169,8 +167,6 @@ if __name__ == "__main__":
             args=training_args,
             model=  model_args.model_name_or_path, 
             tool_names = tools,
-            request_token = request_token,
-            call_token = call_token,
             reward_funcs= reward_funcs, 
             train_dataset=train_dataset,
             eval_dataset=eval_dataset,

@@ -184,8 +184,6 @@ class GRPOGRTrainer(Trainer):
         min_pixels: Optional[int] = 3136,
         attn_implementation: str = "flash_attention_2", #"sdpa",
         tool_model_id: Optional[str] = 'IDEA-Research/grounding-dino-base',
-        request_token: Optional[str] = "<object>",
-        call_token: Optional[str] = "</object>",
     ):
         # Args
         if args is None:
@@ -455,11 +453,7 @@ class GRPOGRTrainer(Trainer):
         for i, reward_func in enumerate(self.reward_funcs):
             if isinstance(reward_func, PreTrainedModel):
                 self.reward_funcs[i] = self.accelerator.prepare_model(reward_func, evaluation_mode=True)
-                
-        self.request_token = request_token
-        self.call_token = call_token
-        self.response_token = "<response>"
-        self.submit_token = "<answer_end>" # not used
+
         self.max_turns = self.args.max_turns
         self.max_tool_response = 30
         self.tool_model_id = tool_model_id 
@@ -516,40 +510,14 @@ class GRPOGRTrainer(Trainer):
         # See https://github.com/huggingface/trl/issues/2770
         logits = logits[:, -logits_to_keep:]
         return selective_log_softmax(logits, input_ids)  #  compute logprobs for the input tokens
-     
-    def parse_tool_call(self, text):
-        """
-        Parse request string. Expected format: <request_token>query<end_token>, query could be (x1,y1),(x2,y2) or just str.
-        """
-        # result = re.search(f"(?<={self.request_token}).*?(?={self.call_token})", text, re.DOTALL)
-
-        # # if we can't find a <request>/<call> span we return none
-        # if result is None:
-        #     return None
-        # else:
-        #     extracted_text = result.group()
-
-        extracted_text = text
-        # if we can't find a bbox span we return none
-        target_str = re.search(f"(?<={self.request_token}).*?(?={self.call_token})", extracted_text, re.DOTALL)
-        if target_str is None:
-            return None
-        else:
-            target_str = target_str.group()
-            return target_str
-        
-
+   
     def parse_grounding(self, text):
         """
         Parse grounding string
         """
-        # result = re.search(f"(?<={self.request_token}).*?(?={self.call_token})", text, re.DOTALL)
 
-        # # if we can't find a <request>/<call> span we return none
-        # if result is None:
-        #     return None
-        # else:
-        #     extracted_text = result.group()
+        # if we can't find a x1, y1, x2, y2 coordinate, we return none
+
 
     
         pattern = r'\b\d+,\s*\d+,\s*\d+,\s*\d+\b'
@@ -750,7 +718,7 @@ class GRPOGRTrainer(Trainer):
                 
                 if self.generation_config.stop_strings is None:
                     self.generation_config.stop_strings = ['</answer>']
-                elif self.call_token not in self.generation_config.stop_strings and self.submit_token not in self.generation_config.stop_strings:
+                elif '</answer>' not in self.generation_config.stop_strings:
                     self.generation_config.stop_strings += ['</answer>']
                 grounded_images = []
                 
