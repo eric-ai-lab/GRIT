@@ -19,7 +19,6 @@ python -m accelerate.commands.launch \
     --setting $setting \
     --max_turns 1 \
     --output_dir output/$setting \
-    --hub_model_id $setting \
     $COMMON_ARGS \
     --eval_steps 50 \
     --save_steps 50 \

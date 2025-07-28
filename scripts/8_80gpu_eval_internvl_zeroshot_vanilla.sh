@@ -19,7 +19,6 @@ python -m accelerate.commands.launch \
     --setting $setting \
     --max_turns 1 \
     --output_dir output/$setting \
-    --hub_model_id $setting \
     $COMMON_ARGS \
     --model_name_or_path OpenGVLab/InternVL3-2B-Instruct\
     --max_prompt_length 1500 \

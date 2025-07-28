@@ -1,6 +1,6 @@
 #!/bin/bash
 
-setting='h100_10_vsr_internvl_add_grounded_reasoning_single_turn_think_rethink'
+setting='dozen_vsr_internvl_add_grounded_reasoning_single_turn_think_rethink'
 export CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7
 export WANDB_PROJECT=$setting
 
@@ -19,7 +19,6 @@ python -m accelerate.commands.launch \
     --setting $setting \
     --max_turns 1 \
     --output_dir output/$setting \
-    --hub_model_id $setting \
     $COMMON_ARGS \
     --eval_steps 50 \
     --save_steps 50 \

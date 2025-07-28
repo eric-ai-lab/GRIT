@@ -151,3 +151,4 @@ local_temp_imgs_grounding_model/
 local_temp_imgs**
 .output/
 output-old/
+GRIT_data/

@@ -20,7 +20,6 @@ python -m accelerate.commands.launch \
     --setting $setting \
     --max_turns 1 \
     --output_dir output/$setting \
-    --hub_model_id $setting \
     $COMMON_ARGS \
     --num_train_epochs 0 \
     --eval_on_start True \
