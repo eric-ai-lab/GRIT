@@ -91,17 +91,28 @@ bash scripts/8_80gpu_20_train_qwen_grounded_reasoning_single_turn_think_rethink.
 ### Evaluation
 
 #### Using training scripts for evaluation
-To evaluate models instead of training, add the following parameters to any training script:
-```bash
---num_train_epochs 0
---eval_on_start True 
---model_name_or_path MODEL_NAME
-```
+To evaluate models trained, apply the following to the training script to convert it to evaluation only mode.
 
-Replace `MODEL_NAME` with the path to your trained model checkpoint.
+1. change 
+    ```bash
+    --config_file ./accelerate_configs/deepspeed_zero2.yaml
+    ```
+    to 
+    ```bash
+    --config_file ./accelerate_configs/multi_gpu.yaml
+    ```
+
+2. add the following parameters to any training script:
+    ```bash
+    --num_train_epochs 0
+    --eval_on_start True 
+    --model_name_or_path MODEL_NAME
+    ```
+
+    Replace `MODEL_NAME` with the path to your trained model checkpoint.
 
 
-More evaluation scripts are available in scripts/
+More evaluation scripts that are for zero-shot evaluation are available in `scripts/`, where they evaluate models with different prompts to fit zero-shot manner.
 
 
 ## Inference

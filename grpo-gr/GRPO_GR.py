@@ -48,16 +48,7 @@ class VLToolGRPOConfig(GRPOConfig):
     tool_port_starting_num: int = field(default=8020, metadata={"help": "Starting port number for tools."})
     
     # InternVL3-specific parameters
-    downsample_ratio: float = field(default=0.5, metadata={"help": "Downsample ratio for vision inputs."})
-    mlp_path: str = field(default=None, metadata={"help": "Path to pretrained MLP projector."})
     force_image_size: int = field(default=448, metadata={"help": "Forced resize image dimension."})
-    dynamic_image_size: bool = field(default=True, metadata={"help": "Enable dynamic image resizing."})
-    vision_select_layer: int = field(default=-1, metadata={"help": "Selected vision model layer for extraction."})
-    min_dynamic_patch: int = field(default=8, metadata={"help": "Minimum dynamic patch size."})
-    max_dynamic_patch: int = field(default=6, metadata={"help": "Maximum dynamic patch size."})
-    use_thumbnail: bool = field(default=True, metadata={"help": "Use thumbnails instead of full images."})
-    ps_version: str = field(default='v2', metadata={"help": "Position embedding scheme version."})
-    drop_path_rate: float = field(default=0.1, metadata={"help": "Drop path rate for stochastic depth in ViT."})
     use_backbone_lora: int = field(default=0, metadata={"help": "LoRA rank for vision backbone."})
     use_llm_lora: int = field(default=0, metadata={"help": "LoRA rank for LLM."})
     freeze_backbone: bool = field(default=True, metadata={"help": "Freeze vision backbone parameters."})

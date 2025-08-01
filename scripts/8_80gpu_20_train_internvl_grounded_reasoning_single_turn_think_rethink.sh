@@ -1,6 +1,6 @@
 #!/bin/bash
 
-setting='dozen_vsr_internvl_add_grounded_reasoning_single_turn_think_rethink'
+setting='rebuttal_dozen_vsr_internvl_after_MPO_add_grounded_reasoning_single_turn_think_rethink'
 export CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7
 export WANDB_PROJECT=$setting
 
@@ -25,5 +25,6 @@ python -m accelerate.commands.launch \
     --num_train_epochs 200 \
     --lr_scheduler_type cosine \
     --per_device_eval_batch_size 96 \
-    --model_name_or_path OpenGVLab/InternVL3-2B-Instruct\
-    --max_prompt_length 1500
+    --model_name_or_path OpenGVLab/InternVL3-2B \
+    --max_prompt_length 1500 \
+    --eval_on_start True 

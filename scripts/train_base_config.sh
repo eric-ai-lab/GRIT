@@ -10,7 +10,6 @@ COMMON_ARGS="
     --per_device_train_batch_size 4 \
     --gradient_accumulation_steps 4 \
     --torch_empty_cache_steps 1 \
-    --model_name_or_path Qwen/Qwen2.5-VL-3B-Instruct \
     --max_completion_length 1000 \
     --max_prompt_length 750 \
     --eval_strategy steps \
@@ -24,6 +23,5 @@ COMMON_ARGS="
     --beta 0.01 \
     --bf16 True \
     --bf16_full_eval True \
-    --log_completions True\
-    --push_to_hub True 
+    --log_completions True
 "

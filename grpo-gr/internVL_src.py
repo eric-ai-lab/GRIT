@@ -1,5 +1,8 @@
 
 # for internvl3
+import os, sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from internvl.model.internvl_chat.configuration_intern_vit import InternVisionConfig
 from internvl.model.internvl_chat.configuration_internvl_chat import InternVLChatConfig
 from internvl.model.internvl_chat.modeling_intern_vit import InternVisionModel
@@ -36,32 +39,8 @@ SIGLIP_STD = (0.5, 0.5, 0.5)
 def load_image(image_file, is_train, input_size=448, max_num=2):
     image = Image.open(image_file).convert('RGB')
     transform = build_transform(is_train, input_size=input_size)
-    images = dynamic_preprocess(image, image_size=input_size, use_thumbnail=True, max_num=max_num)
+    images = dynamic_preprocess(image, image_size=input_size, use_thumbnail=True, max_num=max_num) # max_num means target image patch ratio is one of [1,1], [1,2], [2,1]
     pixel_values = [transform(image) for image in images]
     pixel_values = torch.stack(pixel_values)
     return pixel_values, [image]
 
-
-def preprocess_internvl2_5(
-        template_name,
-        sources,
-        tokenizer: transformers.PreTrainedTokenizer,
-        num_image_token_list: list,
-        text_only: bool = False,
-        group_by_length: bool = False,
-        use_packed_ds: bool = False,
-        ds_name: str = None,
-        num_image: int = 1
-) -> Dict:
-    assert len(sources) == 1, 'process only the first conversations'
-    conversations = sources[0]
-
-    for role, input_id in zip(roles, input_ids):
-        final_input_ids.append(input_id)
-
-    input_ids = torch.tensor(np.concatenate(final_input_ids))[:tokenizer.model_max_length]
-
-    return dict(
-        input_ids=input_ids,
-        attention_mask=input_ids.ne(tokenizer.pad_token_id),
-    )

@@ -195,6 +195,9 @@ class GRPOGRTrainer(Trainer):
         # Trained model
         model_init_kwargs = args.model_init_kwargs or {}
         model_init_kwargs["attn_implementation"] = attn_implementation
+        # If FlashAttention 2 is requested and no dtype provided, default to BF16 (supported by FA2)
+        if attn_implementation == "flash_attention_2" and "torch_dtype" not in model_init_kwargs:
+            model_init_kwargs["torch_dtype"] = torch.bfloat16
         def _load_optimizer_and_scheduler(self, checkpoint_path):
             optimizer_path = os.path.join(checkpoint_path, "optimizer.pt")
             scheduler_path = os.path.join(checkpoint_path, "scheduler.pt")
@@ -211,7 +214,6 @@ class GRPOGRTrainer(Trainer):
         assert isinstance(model, str)
         model_id = model
         self.model_id = model_id
-        
         torch_dtype = model_init_kwargs.get("torch_dtype")
         if isinstance(torch_dtype, torch.dtype) or torch_dtype == "auto" or torch_dtype is None:
             pass  # torch_dtype is already a torch.dtype or "auto" or None
@@ -232,21 +234,13 @@ class GRPOGRTrainer(Trainer):
             model = Qwen2_5_VLForConditionalGeneration.from_pretrained(model, **model_init_kwargs)
         elif "internvl" in model_id.lower():
             config = InternVLChatConfig.from_pretrained(model_id)
-            config.vision_config.drop_path_rate = args.drop_path_rate
             if config.llm_config.model_type == 'internlm2':
                 config.llm_config.attn_implementation = 'flash_attention_2'  # for InternLM
                 print('Using flash_attention_2 for InternLM')
             else:
                 config.llm_config._attn_implementation = 'flash_attention_2'  # for LLaMA
                 print('Using flash_attention_2 for LLaMA')
-            config.template = args.conv_style
-            config.select_layer = args.vision_select_layer
-            config.dynamic_image_size = args.dynamic_image_size
-            config.use_thumbnail = args.use_thumbnail
-            config.ps_version = args.ps_version
-            config.min_dynamic_patch = args.min_dynamic_patch
-            config.max_dynamic_patch = args.max_dynamic_patch
-
+            assert config.template == args.conv_style
             model = InternVLChatModel.from_pretrained(
                 model_id, torch_dtype=torch.bfloat16, config=config)
             patch_size = model.config.vision_config.patch_size
@@ -318,15 +312,12 @@ class GRPOGRTrainer(Trainer):
                 img_context_token_id = tokenizer.convert_tokens_to_ids(IMG_CONTEXT_TOKEN)
                 tcs_loader = None
                 processing_class = tokenizer
-                
                 if num_new_tokens > 0:
                     model.language_model.resize_token_embeddings(len(tokenizer))
                     self.ref_model.language_model.resize_token_embeddings(len(tokenizer))
-
                     output_embeddings = model.language_model.get_output_embeddings().weight.data
                     output_embeddings_avg = output_embeddings[:-num_new_tokens].mean(dim=0, keepdim=True)
                     output_embeddings[-num_new_tokens:] = output_embeddings_avg
-
                     model.config.llm_config.vocab_size = len(tokenizer)
                     model.language_model.config.vocab_size = len(tokenizer)      
                     self.ref_model.config.llm_config.vocab_size = len(tokenizer)
@@ -529,9 +520,6 @@ class GRPOGRTrainer(Trainer):
             return None
         
     def multi_modal_get_item(self, data_items):
-        # Build transformation function
-        transform = build_transform(is_train=self.is_train, input_size=self.args.force_image_size,
-                                    pad2square=False, normalize_type='imagenet')
 
         # Ensure the first conversation contains an image placeholder
         # if '<image>' not in data_item['question']:
@@ -544,21 +532,14 @@ class GRPOGRTrainer(Trainer):
         for data_item in data_items:
             image_path = [data_item['message'][i]['content'][k]['image'] for i in range(len(data_item['message'])) for k in range(len(data_item['message'][i]['content'])) if 'image' in data_item['message'][i]['content'][k]]
             num_image = len(image_path)
-            # not using tcs_loader, use PIL
-            # Ensure that there is only one patch, otherwise, we need apply dynamic image size 
-            assert len(image_path) == 1, f'The number of patches should be 1, but got {len(image_path)}.'
+            assert len(image_path) == 1, f'The number of image input should be 1, but got {len(image_path)}.'
             
+            # we apply dynamic image size, i.e. dynamic_preprocess(), for the image input
             pixel_value, image = load_image(image_path[0], self.is_train)
             images.append(image)
             pixel_values.append(pixel_value)
 
-            # Ensure that there is only one patch, otherwise, we need apply dynamic image size 
             num_patches.append(pixel_value.size(0))
-            # assert num_patches == 1, f'The number of patches should be 1, but got {num_patches}.'
-
-            # Select the appropriate preprocessing function based on the template name
-            # preprocess_function = preprocess_internvl2_5
-
 
 
             # Preprocess the conversations and generate the return dictionary
@@ -582,19 +563,12 @@ class GRPOGRTrainer(Trainer):
             
             # if not text_only:
             new_conversations = []
-            current_image_idx = 0
             for conversation in conversations:
                 if conversation['from'] == 'human':
-                    image_cnt = conversation['value'].count('<image>')
-                    for i in range(image_cnt):
-                        if current_image_idx == num_image:
-                            break
-                        image_tokens = f'{IMG_START_TOKEN}{IMG_CONTEXT_TOKEN * num_image_token_list[current_image_idx]}{IMG_END_TOKEN}'
-                        conversation['value'] = conversation['value'].replace('<image>', image_tokens, 1)
-                        current_image_idx += 1
+                    image_tokens = f'{IMG_START_TOKEN}{IMG_CONTEXT_TOKEN * num_image_token_list[0]}{IMG_END_TOKEN}'
+                    conversation['value'] = conversation['value'].replace('<image>', image_tokens, 1)
                 new_conversations.append(conversation)
             conversations = new_conversations
-            assert current_image_idx == num_image, f'{current_image_idx} != {num_image}'
 
             batches, roles = [], []
             if system_prompt is not None:
@@ -702,6 +676,13 @@ class GRPOGRTrainer(Trainer):
             latest_prompt_ids, latest_prompt_mask, latest_pixel_values = \
                 prompt_inputs["input_ids"], prompt_inputs["attention_mask"], prompt_inputs.get("pixel_values")
             
+            # Ensure vision tensors match the model dtype (BF16 or FP32) to avoid mismatch errors
+            if latest_pixel_values is not None:
+                model_dtype = next(self.model.parameters()).dtype
+                if latest_pixel_values.dtype != model_dtype:
+                    prompt_inputs["pixel_values"] = latest_pixel_values.to(model_dtype)
+                    latest_pixel_values = prompt_inputs["pixel_values"]
+
             latest_image_grid_thw = prompt_inputs.get("image_grid_thw")
             
             
