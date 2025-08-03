@@ -1,6 +1,6 @@
 #!/bin/bash
 
-setting='dozen_vsr_qwen_add_grounded_reasoning_single_turn_think_rethink'
+setting='batch_8_dozen_vsr_qwen_add_grounded_reasoning_single_turn_think_rethink'
 export CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7
 export WANDB_PROJECT=$setting
 
@@ -24,4 +24,7 @@ python -m accelerate.commands.launch \
     --save_steps 50 \
     --num_train_epochs 200 \
     --lr_scheduler_type cosine \
-    --per_device_eval_batch_size 84
+    --per_device_eval_batch_size 84 \
+    --model_name_or_path Qwen/Qwen2.5-VL-3B-Instruct \
+    --per_device_train_batch_size 1 \
+    --gradient_accumulation_steps 1 \

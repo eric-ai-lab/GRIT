@@ -21,6 +21,7 @@ python -m accelerate.commands.launch \
     --max_turns 1 \
     --output_dir output/$setting \
     $COMMON_ARGS \
+    --model_name_or_path Qwen/Qwen2.5-VL-3B-Instruct \
     --num_train_epochs 0 \
     --eval_on_start True \
     --per_device_eval_batch_size 84

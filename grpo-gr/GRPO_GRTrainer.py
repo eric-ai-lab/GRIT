@@ -211,7 +211,7 @@ class GRPOGRTrainer(Trainer):
                 print("Scheduler state loaded from checkpoint.")
 
         # if isinstance(model, str):
-        assert isinstance(model, str)
+        assert isinstance(model, str), f"model must be a string, but got {type(model)}"
         model_id = model
         self.model_id = model_id
         torch_dtype = model_init_kwargs.get("torch_dtype")
