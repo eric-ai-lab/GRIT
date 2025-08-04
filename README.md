@@ -71,6 +71,12 @@ Pretrained GRIT models are available on Hugging Face:
    git clone https://huggingface.co/datasets/yfan1997/GRIT_data
    ```
    Follow the instructions in GRIT_data/README.md to download image data and place it within the GRIT_data directory.
+7. **Login with Huggingface cli**
+    ```bash
+    pip install huggingface_hub
+    huggingface-cli login
+    ```
+
 
 ## Training and evaluation
 
