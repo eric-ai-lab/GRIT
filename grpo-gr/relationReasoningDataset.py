@@ -1,7 +1,7 @@
 from torch.utils.data import DataLoader, Dataset
 import jsonlines
 import os
-class RelationReasoningDataset(DataLoader):
+class RelationReasoningDataset(Dataset):
     def __init__(self, data_path, image_folder_path, prompt, limits=None, prompt_suffix = ''):
         # sample data: {"question": "What is across from the truck?", "answer": "tv", "image": "000000410123.jpg", "width": 640, "height": 354, "bboxs": [[343.87, 94.03, 396.81, 126.06]], "dataset": "vsr", "split": "train"}
         if type(data_path) == str:
