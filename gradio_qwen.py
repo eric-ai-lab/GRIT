@@ -30,8 +30,7 @@ MAX_PIXELS = 512 * 28 * 28
 # 1. Load model & processor
 # ----------------------------------------------------------------------
 MODEL_ID = (
-    "/data4/yue/trl_tool_multimodal/output/"
-    "h100_dozen_vsr_qwen_add_grounded_thinking_single_turn_think_rethink_150"
+    "yfan1997/GRIT-20-Qwen2.5-VL-3B"
 )
 
 model = Qwen2_5_VLForConditionalGeneration.from_pretrained(
