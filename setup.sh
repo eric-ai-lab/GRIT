@@ -28,6 +28,7 @@ pip install peft
 # pip install accelerate
 pip install datasets
 pip install bitsandbytes
+pip install flash-attn==2.7.4.post1
 pip install wandb
 
 pip install openai
