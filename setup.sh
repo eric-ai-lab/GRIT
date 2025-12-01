@@ -1,7 +1,5 @@
 #!/bin/bash
 
-conda create -n grpo_env python=3.10 -y
-conda activate grpo_env
 
 sudo apt-get update
 sudo apt-get install -y python3-dev build-essential ninja-build
